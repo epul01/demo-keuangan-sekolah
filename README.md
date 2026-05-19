@@ -1,132 +1,79 @@
-# Sistem Keuangan Sekolah - Qur'anic School of Dewan Da'wah Cirebon
+# Sistem Keuangan Sekolah
 
-Aplikasi manajemen keuangan sekolah berbasis web yang dibangun dengan Next.js, Prisma, dan PostgreSQL.
+Aplikasi web untuk mengelola keuangan sekolah — mencatat pemasukan, pengeluaran, pembayaran SPP siswa, dan menghasilkan laporan keuangan.
 
-## ✨ Fitur
+## Fitur
 
-- 📊 **Dashboard** - Ringkasan keuangan dengan grafik bulanan
-- 👨‍🎓 **Manajemen Siswa** - CRUD data siswa
-- 💰 **Pemasukan** - 7 jenis: SPP Bulanan, Pendaftaran, Buku, Biaya Ujian, Infaq, Uang Kegiatan, Lainnya
-- 📤 **Pengeluaran** - 6 kategori: ATK, Gaji Guru, Listrik, Air, Maintenance, Lainnya
-- 📋 **Laporan** - Export PDF & Excel
-- 🔔 **Notifikasi** - Pengingat SPP belum dibayar
-- 📈 **Monitoring Pembayaran** - Cek progres pembayaran setiap siswa
-- 🔐 **Autentikasi** - Login dengan role Admin & Bendahara
+- **Dashboard** — Ringkasan keuangan dengan grafik dan statistik
+- **Manajemen Siswa** — Data siswa lengkap dengan info wali dan kelas
+- **Pembayaran SPP** — Pencatatan pembayaran SPP per bulan per siswa
+- **Pemasukan** — Pencatatan semua kas masuk selain SPP
+- **Pengeluaran** — Pencatatan semua kas keluar
+- **Laporan** — Laporan keuangan dengan filter tanggal dan ekspor data
+- **Login** — Autentikasi admin dengan email dan password
 
-## 🛠️ Tech Stack
+## Quick Start
 
-| Teknologi | Keterangan |
-|-----------|------------|
-| Next.js 16 | Framework React full-stack |
-| TypeScript | Bahasa pemrograman |
-| PostgreSQL | Database (via Vercel Postgres) |
-| Prisma | ORM untuk database |
-| Tailwind CSS | Styling |
-| shadcn/ui | Komponen UI |
-| Recharts | Grafik & chart |
-| jsPDF + xlsx | Export PDF & Excel |
+### 1. Clone & Install
 
-## 📦 Setup Lokal
-
-### Prasyarat
-- Node.js 18+ atau Bun
-- Database PostgreSQL (lokal atau cloud)
-
-### Langkah Installasi
-
-1. **Clone repository**
-   ```bash
-   git clone https://github.com/USERNAME/keuangan-sekolah.git
-   cd keuangan-sekolah
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Setup environment variables**
-   ```bash
-   cp .env.example .env.local
-   ```
-   Edit `.env.local` dan isi dengan connection string database Anda.
-
-4. **Setup database**
-   ```bash
-   npx prisma db push
-   ```
-
-5. **Jalankan development server**
-   ```bash
-   npm run dev
-   ```
-
-6. **Isi data awal (seed)**
-   Buka browser: `http://localhost:3000/api/seed`
-
-7. **Login**
-   - 👑 Admin: `admin@sekolah.id` / `password123`
-   - 📝 Bendahara: `bendahara@sekolah.id` / `password123`
-
-## 🚀 Deploy ke Vercel
-
-### Langkah 1: Upload ke GitHub
-1. Buat repository baru di [github.com/new](https://github.com/new)
-2. Pilih **Private** (rekomendasi)
-3. Upload semua file project
-
-### Langkah 2: Buat Database PostgreSQL
-1. Buka [vercel.com/dashboard](https://vercel.com/dashboard)
-2. Pilih project → tab **Storage**
-3. Klik **Create Database** → pilih **Postgres (Neon)**
-4. Salin connection strings yang muncul
-
-### Langkah 3: Import Project di Vercel
-1. Buka [vercel.com/new](https://vercel.com/new)
-2. Import repository GitHub Anda
-3. Di **Settings → Environment Variables**, tambahkan:
-
-| Variable | Nilai |
-|----------|-------|
-| `DATABASE_URL` | Connection string dengan `?pgbouncer=true` |
-| `DIRECT_URL` | Connection string tanpa pgbouncer |
-| `JWT_SECRET` | Secret key acak (min 32 karakter) |
-
-4. Klik **Deploy**
-
-### Langkah 4: Buat Tabel & Seed Data
-Setelah deploy berhasil:
-1. Buka tab **Storage** → database Anda
-2. Atau kunjungi: `https://NAMA-PROJECT.vercel.app/api/seed`
-
-## 📁 Struktur Folder
-
-```
-├── prisma/
-│   └── schema.prisma          # Database schema
-├── public/
-│   └── logo-sekolah.jpeg      # Logo sekolah
-├── src/
-│   ├── app/
-│   │   ├── (auth)/            # Halaman login
-│   │   ├── (dashboard)/       # Halaman dashboard & fitur
-│   │   └── api/               # API routes
-│   ├── components/
-│   │   ├── layout/            # Sidebar, Header
-│   │   └── ui/                # shadcn/ui components
-│   └── lib/
-│       ├── constants.ts       # Tipe pemasukan/pengeluaran
-│       ├── db.ts              # Prisma client
-│       ├── format.ts          # Format rupiah, tanggal
-│       └── auth-jwt.ts        # JWT authentication
-├── .env.example               # Template env variables
-├── .gitignore                 # File yang di-exclude dari Git
-└── package.json               # Dependencies & scripts
+```bash
+git clone https://github.com/USERNAME/keuangan-sekolah.git
+cd keuangan-sekolah
+npm install
 ```
 
-## 🔒 Keamanan
+### 2. Setup Environment Variables
 
-- ⚠️ **JANGAN** upload file `.env` atau `.env.local` ke GitHub
-- ⚠️ **JANGAN** upload file database (`*.db`) ke GitHub
-- Ganti `JWT_SECRET` dengan key yang kuat di production
-- Ganti password default setelah deploy pertama kali
+```bash
+cp .env.example .env
+```
+
+Edit file `.env` dan isi dengan konfigurasi Anda (lihat `.env.example` untuk panduan).
+
+### 3. Setup Database
+
+**Opsi A: SQLite (lokal, tanpa Supabase)**
+```bash
+# Set DATABASE_MODE=prisma di .env
+npx prisma db push
+npm run dev
+```
+
+**Opsi B: Supabase Cloud (direkomendasikan untuk production)**
+1. Buat akun di [supabase.com](https://supabase.com)
+2. Buat project baru
+3. Salin API Keys dari Settings → API ke file `.env`
+4. Jalankan aplikasi dan ikuti panduan "Supabase Cloud" di sidebar
+
+### 4. Jalankan Aplikasi
+
+```bash
+npm run dev
+```
+
+Buka `http://localhost:3000` di browser.
+
+### 5. Login
+
+- **Email**: `admin@sekolah.id`
+- **Password**: `admin123`
+
+## Deploy ke Vercel
+
+1. Push kode ke GitHub
+2. Buka [vercel.com](https://vercel.com) dan import repository
+3. Tambahkan Environment Variables:
+   - `DATABASE_MODE` = `supabase`
+   - `NEXT_PUBLIC_SUPABASE_URL` = URL project Supabase Anda
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` = Anon key dari Supabase
+   - `SUPABASE_SERVICE_ROLE_KEY` = Service role key dari Supabase
+4. Klik Deploy
+
+> **Penting**: Vercel tidak mendukung SQLite. Pastikan menggunakan Supabase saat deploy ke Vercel.
+
+## Tech Stack
+
+- **Frontend**: Next.js 16 (App Router) + React + TypeScript
+- **Styling**: Tailwind CSS + shadcn/ui
+- **Database**: Prisma + SQLite (lokal) / Supabase PostgreSQL (cloud)
+- **State Management**: Zustand
